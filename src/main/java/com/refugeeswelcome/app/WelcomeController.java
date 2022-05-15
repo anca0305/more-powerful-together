@@ -1,5 +1,6 @@
 package com.refugeeswelcome.app;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -7,6 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,6 +39,23 @@ public class WelcomeController {
 	EventRepository eventsRespository;
 	@Autowired
 	EventenrollmentRepository eventsenrollmentRespository;
+
+	@Autowired
+	private JavaMailSender mailSender;
+
+	public void sendSimpleEmail(String email, String body, String subject)
+	{
+		SimpleMailMessage message = new SimpleMailMessage();
+
+		message.setFrom("pwebtest99@gmail.com");
+		message.setTo(email);
+		message.setText(body);
+		message.setSubject(subject);
+
+		mailSender.send(message);
+		System.out.println("Email send to : "+email);
+
+	}
 	
 	public String getManagementApiToken() {
 	    HttpHeaders headers = new HttpHeaders();
@@ -201,7 +221,25 @@ public class WelcomeController {
 	
 	@PostMapping("/event/add")
     public Event createEvent(@RequestBody Event body){
-        return eventsRespository.save(body);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.set("Authorization", "Bearer " + getManagementApiToken());
+
+		HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> result = restTemplate
+				.exchange("https://dev-rxpyu1l6.us.auth0.com/api/v2/users", HttpMethod.GET, entity, String.class);
+
+		JSONArray jsonObject = new JSONArray(result.getBody());
+
+		for (int i = 0; i < jsonObject.length(); i++) {
+			JSONObject explrObject = jsonObject.getJSONObject(i);
+			sendSimpleEmail(explrObject.getString("email"), "New event on platform More Powerful Together", "MorePowerfulTogether Notification");
+		}
+
+		return eventsRespository.save(body);
     }
 	
 	@GetMapping("/events")
@@ -214,27 +252,27 @@ public class WelcomeController {
         return eventsenrollmentRespository.findAll();
     }
 
-//	@GetMapping("/topvolunteer")
-//	public List<String> getTopVolunteer(){
-//		List<Eventenrollment> enroll =  eventsenrollmentRespository.findAll();
-//		ArrayList<String> users = new ArrayList<String>();
-//		for(int i = 0; i<enroll.size(); i++)
-//		{
-//			users.add(enroll.get(i).getUser_id());
-//		}
-//
-//		List<String> top = new ArrayList<String> ();
-//
-//		Map<Object, Long> group = users.stream()
-//				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-//
-//		group.entrySet().stream()
-//				.sorted(Map.Entry.<Object, Long>comparingByValue().reversed())
-//				.forEach(entry -> top.add(entry.getKey() + " = " + entry.getValue()));
-//
-//		return top;
-//
-//	}
+	@GetMapping("/topvolunteer")
+	public List<String> getTopVolunteer(){
+		List<Eventenrollment> enroll =  eventsenrollmentRespository.findAll();
+		ArrayList<String> users = new ArrayList<String>();
+		for(int i = 0; i<enroll.size(); i++)
+		{
+			users.add(enroll.get(i).getUser_id());
+		}
+
+		List<String> top = new ArrayList<String> ();
+
+		Map<String, Long> group = users.stream()
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+		group.entrySet().stream()
+				.sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+				.forEach(entry -> top.add(entry.getKey() + " = " + entry.getValue()));
+
+		return top;
+
+	}
 
 	@GetMapping("/events/{id}")
 	public Optional<Event> getEventById(@PathVariable String id){
