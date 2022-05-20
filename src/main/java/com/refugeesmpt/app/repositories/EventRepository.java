@@ -1,9 +1,9 @@
-package com.refugeeswelcome.app;
+package com.refugeesmpt.app.repositories;
 
 import java.util.List;
 
+import com.refugeesmpt.app.dao.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
 	

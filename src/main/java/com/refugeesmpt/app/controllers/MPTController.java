@@ -1,5 +1,10 @@
-package com.refugeeswelcome.app;
+package com.refugeesmpt.app.controllers;
 
+import com.refugeesmpt.app.dao.User;
+import com.refugeesmpt.app.repositories.EventRepository;
+import com.refugeesmpt.app.dao.Event;
+import com.refugeesmpt.app.dao.Eventenrollment;
+import com.refugeesmpt.app.repositories.EventenrollmentRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-public class WelcomeController {
+public class MPTController {
 	@Autowired
 	EventRepository eventsRespository;
 	@Autowired

@@ -1,4 +1,4 @@
-package com.refugeeswelcome.app;
+package com.refugeesmpt.app;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

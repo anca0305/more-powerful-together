@@ -1,4 +1,4 @@
-package com.refugeeswelcome.app;
+package com.refugeesmpt.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

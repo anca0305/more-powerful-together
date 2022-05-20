@@ -1,4 +1,4 @@
-package com.refugeeswelcome.app;
+package com.refugeesmpt.app.dao;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

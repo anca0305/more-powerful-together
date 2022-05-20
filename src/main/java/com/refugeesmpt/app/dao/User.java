@@ -1,4 +1,4 @@
-package com.refugeeswelcome.app;
+package com.refugeesmpt.app.dao;
 
 public class User {
 
@@ -80,7 +80,5 @@ public class User {
 	public void setOccupation(String occupation) {
 		this.occupation = occupation;
 	}
-	
-	
-	
+
 }
