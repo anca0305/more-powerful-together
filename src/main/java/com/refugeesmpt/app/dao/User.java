@@ -11,9 +11,10 @@ public class User {
 	private String country;
 	private String city;
 	private String occupation;
-	
+	private String role;
+
 	public User(String fname, String lname, String username, String email, String phone, String password,
-			String country, String city, String occupation) {
+			String country, String city, String occupation, String role) {
 		super();
 		this.fname = fname;
 		this.lname = lname;
@@ -24,6 +25,7 @@ public class User {
 		this.country = country;
 		this.city = city;
 		this.occupation = occupation;
+		this.role = role;
 	}
 	
 	public String getFname() {
@@ -81,4 +83,11 @@ public class User {
 		this.occupation = occupation;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 }

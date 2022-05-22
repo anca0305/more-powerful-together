@@ -129,7 +129,7 @@ public class MPTController {
 	    metadata.put("country", u.getCountry());
 	    metadata.put("city", u.getCity());
 	    metadata.put("occupation", u.getOccupation());
-	    metadata.put("admin", "false");
+	    metadata.put("admin", u.getRole().equals("Volunteer") ? "false" : "true");
 	    
 	    // create a map for post parameters
 	    Map<String, Object> map = new HashMap<>();
@@ -295,5 +295,25 @@ public class MPTController {
 	@PostMapping("/eventsenrollment/add")
 	public Eventenrollment createEvent(@RequestBody Eventenrollment body){
 		return eventsenrollmentRespository.save(body);
+	}
+
+	public Event updateEvent(int id, Event event) {
+		event.setId(id);
+		return eventsRespository.save(event);
+	}
+
+	@PostMapping("/eventedit/{id}")
+	public Event createEvent(@PathVariable String id, @RequestBody Event body){
+		int i = Integer.parseInt(id);
+		return updateEvent(i, body);
+	}
+
+
+	@GetMapping("/eventdelete/{id}")
+	public String eventDelete(@PathVariable String id){
+
+		int i = Integer.parseInt(id);
+		eventsRespository.deleteById(i);
+		return "True";
 	}
 }
